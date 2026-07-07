@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What's Your Number? | Danielle The Coach®</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --plum: #6E2748;
+      --gold: #BA7517;
+      --gold-light: #f5e9cc;
+      --parchment: #FAF8F5;
+      --white: #ffffff;
+      --gray-100: #F4F1EE;
+      --gray-200: #E8E3DC;
+      --gray-400: #A89B8C;
+      --gray-600: #6B5F52;
+      --gray-800: #2E2820;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--parchment); color: var(--gray-800); min-height: 100vh; }
+    .site-header { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 1.25rem 2rem; text-align: center; }
+    .brand-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--plum); letter-spacing: 0.04em; }
+    .brand-name sup { font-size: 11px; vertical-align: super; }
+    .brand-tagline { font-size: 11px; color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .hero { background: var(--plum); padding: 3rem 2rem; text-align: center; }
+    .hero-eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 6vw, 48px); font-weight: 500; color: var(--white); line-height: 1.2; margin-bottom: 16px; }
+    .hero p { font-size: 16px; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto; line-height: 1.7; }
+    .main { max-width: 640px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    .part-eyebrow { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 6px; }
+    .part-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; color: var(--plum); margin-bottom: 6px; line-height: 1.3; }
+    .part-desc { font-size: 14px; color: var(--gray-600); line-height: 1.7; margin-bottom: 1.5rem; }
+    .step { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .step-num { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 6px; }
+    .step-q { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 500; color: var(--gray-800); margin-bottom: 6px; line-height: 1.4; }
+    .step-hint { font-size: 13px; color: var(--gray-400); line-height: 1.6; margin-bottom: 16px; }
+    .optional-tag { display: inline-block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); background: var(--gold-light); padding: 2px 8px; border-radius: 99px; margin-bottom: 8px; }
+    .inp { display: flex; align-items: center; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--parchment); overflow: hidden; transition: border-color 0.2s; }
+    .inp:focus-within { border-color: var(--plum); }
+    .inp .sym { padding: 12px 4px 12px 14px; font-size: 15px; color: var(--gray-400); flex-shrink: 0; line-height: 1; }
+    .inp input[type="number"] { flex: 1; padding: 12px 14px 12px 4px; font-size: 17px; font-family: 'DM Sans', sans-serif; border: none; background: transparent; color: var(--gray-800); outline: none; width: 100%; -moz-appearance: textfield; }
+    .inp input[type="number"]::-webkit-outer-spin-button,
+    .inp input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .section-divider { border: none; border-top: 1px solid var(--gray-200); margin: 2.5rem 0; }
+    .go-btn { width: 100%; padding: 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; letter-spacing: 0.04em; color: var(--white); background: var(--plum); border: none; border-radius: 8px; cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s; }
+    .go-btn:hover { opacity: 0.9; }
+    .results { display: none; margin-top: 2.5rem; }
+    .results.on { display: block; }
+    .headline-box { background: var(--plum); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .headline-box .hl { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--white); line-height: 1.4; margin-bottom: 8px; }
+    .headline-box .hl-sub { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.7; }
+    .cards-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+    .cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
+    .card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.1rem; }
+    .card .cl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--gray-400); margin-bottom: 8px; line-height: 1.4; }
+    .card .cv { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--plum); }
+    .card .cv.gold { color: var(--gold); }
+    .card .cv-sub { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+    .breakdown { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .bd-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-400); margin-bottom: 1rem; }
+    .bd-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--gray-100); font-size: 14px; gap: 12px; }
+    .bd-row:last-child { border-bottom: none; }
+    .bd-row .bl { color: var(--gray-600); line-height: 1.5; }
+    .bd-row .bv { font-weight: 500; color: var(--gray-800); text-align: right; white-space: nowrap; }
+    .bd-note { font-size: 12px; color: var(--gray-400); font-style: italic; margin-top: 10px; line-height: 1.6; }
+    .cta-box { background: var(--gold-light); border: 1px solid #e0c97a; border-radius: 12px; padding: 1.5rem; margin-top: 1rem; }
+    .cta-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 8px; }
+    .cta-txt { font-size: 14px; color: var(--gray-600); line-height: 1.8; margin-bottom: 1rem; }
+    .cta-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .cta-btn-email { flex: 1; min-width: 160px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--white); background: var(--plum); border: none; border-radius: 8px; cursor: pointer; text-align: center; transition: opacity 0.2s; }
+    .cta-btn-email:hover { opacity: 0.9; }
+    .cta-btn-copy { flex: 1; min-width: 160px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--plum); background: var(--white); border: 1px solid var(--plum); border-radius: 8px; cursor: pointer; text-align: center; transition: background 0.2s; }
+    .cta-btn-copy:hover { background: var(--gray-100); }
+    .copy-confirm { font-size: 13px; color: #2D6A4F; margin-top: 10px; display: none; }
+    .reset-btn { width: 100%; padding: 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--gray-400); background: none; border: none; cursor: pointer; margin-top: 1rem; text-decoration: underline; }
+    .reset-btn:hover { color: var(--gray-600); }
+    .site-footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--gray-400); border-top: 1px solid var(--gray-200); background: var(--white); }
+    .site-footer a { color: var(--plum); text-decoration: none; }
+    @media (max-width: 480px) {
+      .cards-2 { grid-template-columns: 1fr; }
+      .cards-3 { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand-name">Danielle The Coach<sup>®</sup></div>
+    <div class="brand-tagline">Simple. Impactful. Profitable.</div>
+  </header>
+
+  <div class="hero">
+    <p class="hero-eyebrow">July 2026 Community Challenge</p>
+    <h1>What's Your Number?</h1>
+    <p>Two parts. Three questions. The clarity you've been avoiding. Let's go.</p>
+  </div>
+
+  <main class="main">
+
+    <p class="part-eyebrow">Part 1 — The Reality Check</p>
+    <h2 class="part-title">If your income stopped today, how long could you survive?</h2>
+    <p class="part-desc">No assumptions. No optimism. Just the real numbers — so you can make real decisions.</p>
+
+    <div class="step">
+      <p class="step-num">Question 1 of 3</p>
+      <p class="step-q">How much do you have saved right now?</p>
+      <p class="step-hint">The money you could actually live on if your income stopped today — savings, emergency fund, accessible accounts.</p>
+      <div class="inp"><span class="sym">$</span><input type="number" id="dtc-savings" placeholder="0" min="0" /></div>
+    </div>
+
+    <div class="step">
+      <p class="step-num">Question 2 of 3</p>
+      <p class="step-q">What does it cost you to survive each month?</p>
+      <p class="step-hint">Not your full lifestyle — just the floor. Rent or mortgage, utilities, groceries, insurance, minimum debt payments. The number that keeps the lights on.</p>
+      <div class="inp"><span class="sym">$</span><input type="number" id="dtc-survive" placeholder="0" min="0" /></div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <p class="part-eyebrow">Part 2 — The Vision Made Real</p>
+    <h2 class="part-title">What does your income goal actually look like?</h2>
+    <p class="part-desc">This number isn't a fantasy. It's a target. Let's make it concrete — and stop letting it feel out of reach.</p>
+
+    <div class="step">
+      <p class="step-num">Question 3 of 3</p>
+      <p class="step-q">How much would you need to make each month in a business of your own that would allow you to pivot without regret?</p>
+      <p class="step-hint">Whether the business is a dream or already in motion — what monthly number would put your mind at ease?</p>
+      <div class="inp"><span class="sym">$</span><input type="number" id="dtc-goal" placeholder="0" min="0" /></div>
+    </div>
+
+    <div class="step">
+      <span class="optional-tag">Optional — but powerful</span>
+      <p class="step-q">What would you charge per client or per offer?</p>
+      <p class="step-hint">Enter your average price point and we'll show you exactly how many clients you need each month to hit your goal. It's just math.</p>
+      <div class="inp"><span class="sym">$</span><input type="number" id="dtc-price" placeholder="0" min="0" /></div>
+    </div>
+
+    <button class="go-btn" id="dtc-go-btn">Please take 2 minutes — show me my numbers</button>
+
+    <div class="results" id="dtc-results">
+
+      <hr class="section-divider" />
+
+      <p class="part-eyebrow">Part 1 — Your Reality Check</p>
+      <div class="headline-box">
+        <p class="hl" id="dtc-p1-hl"></p>
+        <p class="hl-sub" id="dtc-p1-sub"></p>
+      </div>
+      <div class="cards-2">
+        <div class="card">
+          <div class="cl">Monthly survival number</div>
+          <div class="cv" id="dtc-c-survive"></div>
+          <div class="cv-sub">per month to keep the lights on</div>
+        </div>
+        <div class="card">
+          <div class="cl">Financial runway</div>
+          <div class="cv" id="dtc-c-runway"></div>
+          <div class="cv-sub" id="dtc-c-runway-sub"></div>
+        </div>
+      </div>
+      <div class="breakdown">
+        <p class="bd-title">The full picture</p>
+        <div class="bd-row"><span class="bl">Savings / accessible funds</span><span class="bv" id="dtc-b-savings"></span></div>
+        <div class="bd-row"><span class="bl">Monthly survival number</span><span class="bv" id="dtc-b-survive"></span></div>
+        <div class="bd-row"><span class="bl">Financial runway</span><span class="bv" id="dtc-b-runway"></span></div>
+        <p class="bd-note">* This assumes no income coming in, no emergencies, and consistent monthly expenses. Your actual runway may vary.</p>
+      </div>
+
+      <hr class="section-divider" />
+
+      <p class="part-eyebrow">Part 2 — Your Vision Made Real</p>
+      <div class="headline-box">
+        <p class="hl" id="dtc-p2-hl"></p>
+        <p class="hl-sub" id="dtc-p2-sub"></p>
+      </div>
+      <div class="cards-3">
+        <div class="card">
+          <div class="cl">Monthly income goal</div>
+          <div class="cv gold" id="dtc-c-goal-mo"></div>
+          <div class="cv-sub">per month</div>
+        </div>
+        <div class="card">
+          <div class="cl">Annual income goal</div>
+          <div class="cv gold" id="dtc-c-goal-yr"></div>
+          <div class="cv-sub">per year</div>
+        </div>
+        <div class="card" id="dtc-clients-card" style="display:none">
+          <div class="cl">Clients needed monthly</div>
+          <div class="cv gold" id="dtc-c-clients"></div>
+          <div class="cv-sub" id="dtc-c-clients-sub"></div>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <p class="cta-eyebrow">Your next move</p>
+        <p class="cta-txt">Now you have your numbers. Please take 2 minutes to head back to the community and drop the one number that surprised you most — or the one that finally made something click. The next move is yours.</p>
+        <div class="cta-actions">
+          <button class="cta-btn-email" id="dtc-email-btn">Email myself these results</button>
+          <button class="cta-btn-copy" id="dtc-copy-btn">Copy my results</button>
+        </div>
+        <p class="copy-confirm" id="dtc-copy-confirm">✓ Copied! Head back to the community and drop it in the comments.</p>
+      </div>
+
+      <button class="reset-btn" id="dtc-reset-btn">Start over with different numbers</button>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© Danielle The Coach® | <a href="https://daniellethecoach.com" target="_blank">daniellethecoach.com</a></p>
+    <p style="margin-top:6px;">A tool for six-figure professionals ready to pivot without regret.</p>
+  </footer>
+
+  <script>
+  (function() {
+    function fmtD(n) { return '$' + Math.round(n).toLocaleString(); }
+    function fmtR(m) {
+      if (!m || !isFinite(m) || isNaN(m) || m <= 0) return '—';
+      if (m >= 24) return Math.round(m / 12) + ' years';
+      if (m >= 12) return (m / 12).toFixed(1) + ' years';
+      return Math.round(m) + ' month' + (Math.round(m) !== 1 ? 's' : '');
+    }
+    function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+    function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+    function setDisplay(id, val) { var el = document.getElementById(id); if (el) el.style.display = val; }
+
+    function doCalculate() {
+      var savings = getVal('dtc-savings');
+      var survive = getVal('dtc-survive');
+      var goal    = getVal('dtc-goal');
+      var price   = getVal('dtc-price');
+      var runway  = survive > 0 ? savings / survive : 0;
+      var clients = (price > 0 && goal > 0) ? Math.ceil(goal / price) : 0;
+
+      window.dtcResults = { savings: savings, survive: survive, goal: goal, price: price, runway: runway, clients: clients };
+
+      setText('dtc-c-survive', survive > 0 ? fmtD(survive) : '—');
+      setText('dtc-c-runway', fmtR(runway));
+      setText('dtc-c-runway-sub', runway > 0 ? 'barring no emergencies' : '');
+      setText('dtc-b-savings', fmtD(savings));
+      setText('dtc-b-survive', survive > 0 ? fmtD(survive) : '—');
+      setText('dtc-b-runway', fmtR(runway));
+
+      var p1hl, p1sub;
+      if (survive === 0 || savings === 0) {
+        p1hl  = 'Your survival number is the foundation.';
+        p1sub = 'Everything in your pivot strategy builds from this number. Fill in both fields to see how long your resources would last.';
+      } else if (runway < 3) {
+        p1hl  = 'Your runway is tight — and that\'s important to know.';
+        p1sub = 'Less than 3 months of runway means the pivot requires urgency and intention. This isn\'t a reason to panic. It\'s a reason to plan with precision.';
+      } else if (runway < 6) {
+        p1hl  = 'You have a window. The question is what you build inside it.';
+        p1sub = fmtR(runway) + ' of runway gives you breathing room — but not indefinitely. Strategy and movement matter right now.';
+      } else if (runway < 12) {
+        p1hl  = 'You have more runway than most. Use it wisely.';
+        p1sub = fmtR(runway) + ' of resources to work with — barring no emergencies. That\'s enough time to build something real if you move with intention.';
+      } else {
+        p1hl  = 'You have significant runway. Now let\'s put it to work.';
+        p1sub = fmtR(runway) + ' — barring no emergencies. You have time on your side. The pivot is a strategy problem, not a survival problem.';
+      }
+      setText('dtc-p1-hl', p1hl);
+      setText('dtc-p1-sub', p1sub);
+
+      setText('dtc-c-goal-mo', goal > 0 ? fmtD(goal) : '—');
+      setText('dtc-c-goal-yr', goal > 0 ? fmtD(goal * 12) : '—');
+
+      if (clients > 0) {
+        setText('dtc-c-clients', clients);
+        setText('dtc-c-clients-sub', 'at ' + fmtD(price) + ' per client');
+        setDisplay('dtc-clients-card', 'block');
+      } else {
+        setDisplay('dtc-clients-card', 'none');
+      }
+
+      var p2hl, p2sub;
+      if (goal === 0) {
+        p2hl  = 'Your income goal deserves a number.';
+        p2sub = 'A goal without a number is just a wish. Enter what you\'d need to pivot without regret and watch it become real.';
+      } else if (clients > 0) {
+        p2hl  = fmtD(goal) + ' a month is ' + clients + ' client' + (clients !== 1 ? 's' : '') + '. That\'s it.';
+        p2sub = 'At ' + fmtD(price) + ' per client, your goal stops being a number on a screen and becomes a math problem with a solution. And math problems have answers.';
+      } else {
+        p2hl  = fmtD(goal) + ' a month. ' + fmtD(goal * 12) + ' a year.';
+        p2sub = 'That\'s what your pivot without regret looks like in real numbers. Add your price point above to see exactly how many clients it takes to get there.';
+      }
+      setText('dtc-p2-hl', p2hl);
+      setText('dtc-p2-sub', p2sub);
+
+      var resultsEl = document.getElementById('dtc-results');
+      resultsEl.classList.add('on');
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function buildText() {
+      var r = window.dtcResults;
+      if (!r) return '';
+      var t = "My \"What's Your Number?\" Results\nDanielle The Coach® | daniellethecoach.com\n\n";
+      t += "PART 1 — REALITY CHECK\n";
+      t += "Monthly survival number: " + (r.survive > 0 ? fmtD(r.survive) : '—') + "\n";
+      t += "Financial runway: " + fmtR(r.runway) + " (barring no emergencies)\n\n";
+      t += "PART 2 — VISION MADE REAL\n";
+      t += "Monthly income goal: " + (r.goal > 0 ? fmtD(r.goal) : '—') + "\n";
+      t += "Annual income goal: " + (r.goal > 0 ? fmtD(r.goal * 12) : '—') + "\n";
+      if (r.clients > 0) t += "Clients needed monthly: " + r.clients + " at " + fmtD(r.price) + " each\n";
+      t += "\nReady to pivot without regret? Visit daniellethecoach.com";
+      return t;
+    }
+
+    function doEmail() {
+      var subject = encodeURIComponent("My What's Your Number Results | Danielle The Coach®");
+      var body    = encodeURIComponent(buildText());
+      window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
+    }
+
+    function doCopy() {
+      navigator.clipboard.writeText(buildText()).then(function() {
+        var el = document.getElementById('dtc-copy-confirm');
+        el.style.display = 'block';
+        setTimeout(function() { el.style.display = 'none'; }, 4000);
+      });
+    }
+
+    function doReset() {
+      ['dtc-savings','dtc-survive','dtc-goal','dtc-price'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      document.getElementById('dtc-results').classList.remove('on');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('dtc-go-btn').addEventListener('click', doCalculate);
+      document.getElementById('dtc-email-btn').addEventListener('click', doEmail);
+      document.getElementById('dtc-copy-btn').addEventListener('click', doCopy);
+      document.getElementById('dtc-reset-btn').addEventListener('click', doReset);
+    });
+  })();
+  </script>
+
+</body>
+</html>
